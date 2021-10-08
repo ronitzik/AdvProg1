@@ -41,50 +41,65 @@ public class ConsoleRunner {
     public void runGame() {
 
         StatusUpdate update;
-        Player player;
+
+        String numString;
+        int NUM_PLAYERS;
+
+        out.println("How many players? ");
 
         try {
-            outputSingleMessage("you", "What's your name? ");
-            final String name = in.readLine();
-
-            // Anonymous inner class can access final variables in enclosing scope.
-            player = new Player() {
-                @Override
-                public String getName() {
-                    return name;
-                }
-            };
-
-            update = game.playerJoin(player, System.currentTimeMillis());
-            // Print the status message.
-            outputStatusMessages(update);
+            numString = in.readLine();
+            NUM_PLAYERS = Integer.parseInt(numString);
         } catch (IOException e) {
-            // This should never happen...
+            // can't do anything!
             err.println(e);
             return;
         }
 
+        Player[] players = new Player[NUM_PLAYERS];
+
+        for (int i = 0; i < NUM_PLAYERS; ++i) {
+            try {
+                outputSingleMessage("player " + i, "What's your name? ");
+                final String name = in.readLine();
+
+                // Anonymous inner class can access final variables in enclosing scope.
+                players[i] = new Player() {
+                    @Override
+                    public String getName() {
+                        return name;
+                    }
+                };
+
+                update = game.playerJoin(players[i], System.currentTimeMillis());
+                // Print the status message.
+                outputStatusMessages(update);
+            } catch (IOException e) {
+                // This should never happen...
+                err.println(e);
+                return;
+            }
+        }
+
 
         while (!game.hasEnded()) {
-            while (true) {
-                outputSingleMessage(player, "enter your guess-> ");
+            for (int i = 0; i < NUM_PLAYERS; ++i) {
+                outputSingleMessage(players[i], "enter your guess-> ");
                 try {
                     String word = in.readLine();
-                    update = game.playerMove(player, word,
+                    update = game.playerMove(players[i], word,
                             System.currentTimeMillis());
 
                     outputStatusMessages(update);
                 } catch (IOException e) {
                     err.println(e);
                 }
-                break;
             }
         }
 
         out.println("Game Over!");
 
     }
-
 
     static final String MSG_SEP = "\n         ";
     static final String MSG_FORMAT = "[For %s] %s"; // Expects to get two params: player name and message
