@@ -49,7 +49,12 @@ public class ConsoleRunner {
 
         try {
             numString = in.readLine();
-            NUM_PLAYERS = Integer.parseInt(numString);
+            if (!numString.isEmpty()) {
+                NUM_PLAYERS = Integer.parseInt(numString);
+            } else {
+                out.println("Invalid input. Please enter a valid number.");
+                return;
+            }
         } catch (IOException e) {
             // can't do anything!
             err.println(e);
@@ -81,7 +86,6 @@ public class ConsoleRunner {
             }
         }
 
-
         while (!game.hasEnded()) {
             for (int i = 0; i < NUM_PLAYERS; ++i) {
                 outputSingleMessage(players[i], "enter your guess-> ");
@@ -103,7 +107,6 @@ public class ConsoleRunner {
 
     static final String MSG_SEP = "\n         ";
     static final String MSG_FORMAT = "[For %s] %s"; // Expects to get two params: player name and message
-
 
     private void outputSingleMessage(String playerName, String msg) {
         out.println(String.format(MSG_FORMAT, playerName, msg));

@@ -38,7 +38,7 @@ public class NumberGuessingGame implements Game {
             int guess = Integer.parseInt(word);
 
             if (guess == number) {
-                update.addMessage("Yay! " + player.getName() + "has guessed the number!");
+                update.addMessage("Yay! " + player.getName() + " has guessed the number!");
                 wasGuessed = true;
             } else if (guess > number) {
                 update.addMessage(player, "Your guess is too high");
