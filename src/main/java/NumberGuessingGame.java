@@ -1,5 +1,4 @@
 
-
 public class NumberGuessingGame implements Game {
     int number;
 
@@ -35,16 +34,21 @@ public class NumberGuessingGame implements Game {
     public StatusUpdate playerMove(Player player, String word, long time) {
         StatusUpdate update = new StatusUpdate();
 
-        int guess = Integer.parseInt(word);
+        try {
+            int guess = Integer.parseInt(word);
 
-        if (guess == number) {
-            update.addMessage("Yay! " + player.getName() + " has guessed the number!");
-            wasGuessed = true;
-        } else if (guess > number) {
-            update.addMessage(player, "Your guess is too high");
-        } else {
-            update.addMessage(player, "Your guess is too low");
+            if (guess == number) {
+                update.addMessage("Yay! " + player.getName() + " has guessed the number!");
+                wasGuessed = true;
+            } else if (guess > number) {
+                update.addMessage(player, "Your guess is too high");
+            } else {
+                update.addMessage(player, "Your guess is too low");
+            }
+        } catch (NumberFormatException e) {
+            update.addMessage(player, "You must guess a number!");
         }
+
         return update;
     }
 
@@ -53,7 +57,6 @@ public class NumberGuessingGame implements Game {
         // Do nothing, we don't really care.
         return null;
     }
-
 
     @Override
     public boolean hasEnded() {
